@@ -86,3 +86,35 @@ export async function deleteDealTask(req, res, next) {
     next(err);
   }
 }
+
+export async function listAllTasks(req, res, next) {
+  try {
+    const status = req.query.status; // OPEN/DONE
+    const assignee = req.query.assignee; // userId
+    const dueFrom = req.query.dueFrom; // ISO date
+    const dueTo = req.query.dueTo; // ISO date
+    const limit = Math.min(Math.max(parseInt(req.query.limit || "50", 10), 1), 200);
+
+    const filter = {};
+    if (status) filter.status = status;
+    if (assignee) filter.assignee = assignee;
+
+    if (dueFrom || dueTo) {
+      filter.dueDate = {};
+      if (dueFrom) filter.dueDate.$gte = new Date(dueFrom);
+      if (dueTo) filter.dueDate.$lte = new Date(dueTo);
+    }
+
+    const tasks = await DealTask.find(filter)
+      .sort({ dueDate: 1, createdAt: -1 })
+      .limit(limit)
+      .populate("deal", "name title")
+      .populate("assignee", "name email role")
+      .populate("createdBy", "name email role");
+
+    return res.status(200).json({ results: tasks });
+  } catch (err) {
+    next(err);
+  }
+}
+
