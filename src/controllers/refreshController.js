@@ -78,7 +78,17 @@ export async function refresh(req, res, next) {
       path: "/api/v1/auth/refresh",
     });
 
-    return res.status(200).json({ accessToken: newAccessToken });
+    return res
+      .status(200)
+      .json({
+        accessToken: newAccessToken,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
   } catch (err) {
     next(err);
   }

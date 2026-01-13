@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import { errorHandler } from "./middleware/errorHandler.js";
 import apiV1Routes from "./routes/index.js";
 import dealNotesRoutes from "./routes/dealNotes.routes.js";
+import dealTasksRoutes from "./routes/dealTasks.routes.js";
 
 
 const app = express();
@@ -43,7 +44,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 app.use("/api/v1/", apiLimiter);
-
+app.use("/api/v1", dealTasksRoutes);
 
 
 // Health check route

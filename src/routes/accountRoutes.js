@@ -25,12 +25,7 @@ router.patch(
   updateAccount
 );
 
-router.get(
-  "/",
-  requireAuth,
-  authorize(PERMISSIONS.ACCOUNT_READ),
-  listAccounts
-);
+router.get("/", requireAuth, authorize(PERMISSIONS.ACCOUNT_READ), listAccounts);
 
 router.get(
   "/:id",
@@ -38,5 +33,18 @@ router.get(
   authorize(PERMISSIONS.ACCOUNT_READ),
   getAccountById
 );
+
+// router.post(
+//   "/",
+//   requireAuth,
+//   authorize(PERMISSIONS.ACCOUNT_CREATE),
+//   createAccount
+// );
+// router.patch(
+//   "/:id",
+//   requireAuth,
+//   authorize(PERMISSIONS.ACCOUNT_UPDATE),
+//   updateAccount
+// );
 
 export default router;
