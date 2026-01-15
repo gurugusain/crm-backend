@@ -17,21 +17,35 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // Allow Postman or server-to-server calls
+//       if (!origin) return callback(null, true);
+
+//       if (allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       }
+
+//       return callback(new Error("Not allowed by CORS"));
+//     },
+//     credentials: true, // VERY IMPORTANT for cookies
+//   })
+// );
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow Postman or server-to-server calls
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
+      return callback(null, allowedOrigins.includes(origin));
     },
-    credentials: true, // VERY IMPORTANT for cookies
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.options("*", cors());
 
 
 app.use(express.json());
